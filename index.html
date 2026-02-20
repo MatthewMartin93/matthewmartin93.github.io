@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>NJ Turkey Spotter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-input: #0f3460;
+            --accent-orange: #e94560;
+            --accent-gold: #f5a623;
+            --accent-green: #27ae60;
+            --accent-red: #e74c3c;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2d1;
+            --text-muted: #6c7a9b;
+            --border-color: #2a3a5c;
+            --shadow: 0 8px 32px rgba(0,0,0,0.3);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-orange);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: var(--accent-gold);
+            bottom: 20%;
+            left: -80px;
+            animation-delay: -7s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: var(--accent-green);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -14s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 24px 0 16px;
+        }
+
+        .turkey-icon {
+            font-size: 64px;
+            display: block;
+            animation: wobble 3s infinite ease-in-out;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .nj-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--bg-input), #1a3a6e);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-top: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-orange));
+            border-radius: 3px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .emoji {
+            font-size: 28px;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Option Buttons (radio replacement) */
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-gold);
+            background: rgba(245, 166, 35, 0.08);
+        }
+
+        .option-btn.selected {
+            border-color: var(--accent-gold);
+            background: rgba(245, 166, 35, 0.12);
+            box-shadow: 0 0 20px rgba(245, 166, 35, 0.1);
+        }
+
+        .option-btn.selected .option-radio {
+            border-color: var(--accent-gold);
+            background: var(--accent-gold);
+        }
+
+        .option-btn.selected .option-radio::after {
+            transform: scale(1);
+        }
+
+        .option-radio {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+
+        .option-radio::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: scale(0);
+            margin-top: -5px;
+            margin-left: -5px;
+            transition: transform 0.25s ease;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-label {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .option-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .option-emoji {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        /* Status specific colors */
+        .option-btn[data-value="alive"].selected {
+            border-color: var(--accent-green);
+            background: rgba(39, 174, 96, 0.12);
+        }
+
+        .option-btn[data-value="alive"].selected .option-radio {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+        }
+
+        .option-btn[data-value="dead"].selected {
+            border-color: var(--accent-red);
+            background: rgba(231, 76, 60, 0.12);
+        }
+
+        .option-btn[data-value="dead"].selected .option-radio {
+            border-color: var(--accent-red);
+            background: var(--accent-red);
+        }
+
+        .option-btn[data-value="yes"].selected {
+            border-color: var(--accent-red);
+            background: rgba(231, 76, 60, 0.12);
+        }
+
+        .option-btn[data-value="yes"].selected .option-radio {
+            border-color: var(--accent-red);
+            background: var(--accent-red);
+        }
+
+        .option-btn[data-value="no"].selected {
+            border-color: var(--accent-green);
+            background: rgba(39, 174, 96, 0.12);
+        }
+
+        .option-btn[data-value="no"].selected .option-radio {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+        }
+
+        /* Select Dropdown */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-select, .form-input, .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: border-color 0.25s ease;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236c7a9b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 44px;
+        }
+
+        .form-select:focus, .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        .form-select option {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Counter Input */
+        .counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .counter-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .counter-btn:active {
+            transform: scale(0.92);
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: var(--bg-dark);
+        }
+
+        .counter-display {
+            font-size: 52px;
+            font-weight: 900;
+            min-width: 80px;
+            text-align: center;
+            color: var(--accent-gold);
+        }
+
+        .counter-label {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .quick-counts {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .quick-count-btn {
+            padding: 8px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-count-btn:active {
+            background: var(--accent-gold);
+            color: var(--bg-dark);
+            border-color: var(--accent-gold);
+        }
+
+        /* GPS Button */
+        .gps-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1a5276, #1a3a6e);
+            border: 2px solid #2471a3;
+            border-radius: 12px;
+            color: #5dade2;
+            font-family: 'Nunito', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: all 0.25s ease;
+        }
+
+        .gps-btn:active {
+            transform: scale(0.98);
+        }
+
+        .gps-btn.success {
+            background: linear-gradient(135deg, #1a5230, #1a5230);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .gps-btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .gps-btn.loading .spinner {
+            display: block;
+        }
+
+        .gps-btn.loading .gps-icon {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .gps-coords {
+            display: none;
+            padding: 10px 14px;
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .gps-coords.visible {
+            display: block;
+        }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-back {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+            flex: 0.6;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            color: var(--bg-dark);
+            box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent-green), #219a52);
+            color: white;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+            width: 100%;
+        }
+
+        /* Review Step */
+        .review-card {
+            background: var(--bg-input);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .review-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .review-row:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .review-value {
+            font-size: 15px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .review-value.alive { color: var(--accent-green); }
+        .review-value.dead { color: var(--accent-red); }
+        .review-value.aggressive { color: var(--accent-red); }
+        .review-value.not-aggressive { color: var(--accent-green); }
+
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .success-screen.visible {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 16px;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .success-screen h2 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent-green);
+            margin-bottom: 8px;
+        }
+
+        .success-screen p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .btn-new-report {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Error Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-red);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.9);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loading-overlay.visible {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        /* Info banner */
+        .info-banner {
+            background: linear-gradient(135deg, rgba(245, 166, 35, 0.1), rgba(233, 69, 96, 0.1));
+            border: 1px solid rgba(245, 166, 35, 0.2);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-banner .info-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .info-banner p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Number input styling */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-pattern">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <span class="turkey-icon">🦃</span>
+            <h1>NJ Turkey Spotter</h1>
+            <p>Help track wild turkey populations</p>
+            <div class="nj-badge">🗺️ New Jersey Wildlife Survey</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="stepLabel">Step 1 of 4</span>
+                <span id="stepPercent">0%</span>
+            </div>
+        </div>
+
+        <!-- STEP 1: Dead or Alive -->
+        <div class="form-step active" id="step1">
+            <div class="card">
+                <div class="card-title">
+                    <span class="emoji">💓</span>
+                    Turkey Status
+                </div>
+                <div class="card-subtitle">
+                    Were the turkeys you spotted dead or alive? This helps us track both population and predation/hunting losses.
+                </div>
+                <div class="option-group" id="statusGroup">
+                    <div class="option-btn" data-value="alive" onclick="selectOption('status', 'alive', this)">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-label">Alive</div>
+                            <div class="option-desc">Turkey(s) were living and active</div>
+                        </div>
+                        <div class="option-emoji">🦃</div>
+                    </div>
+                    <div class="option-btn" data-value="dead" onclick="selectOption('status', 'dead', this)">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-label">Dead</div>
+                            <div class="option-desc">Found deceased — possibly hunted or predator attack</div>
+                        </div>
+                        <div class="option-emoji">💀</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aggressive sub-question (shown only if alive) -->
+            <div class="card" id="aggressiveCard" style="display: none;">
+                <div class="card-title">
+                    <span class="emoji">⚠️</span>
+                    Behavior
+                </div>
+                <div class="card-subtitle">
+                    Were the turkeys aggressive towards people? (Charging, chasing, blocking paths, etc.)
+                </div>
+                <div class="option-group" id="aggressiveGroup">
+                    <div class="option-btn" data-value="yes" onclick="selectOption('aggressive', 'yes', this)">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-label">Yes — Aggressive</div>
+                            <div class="option-desc">They were hostile or threatening towards people</div>
+                        </div>
+                        <div class="option-emoji">😤</div>
+                    </div>
+                    <div class="option-btn" data-value="no" onclick="selectOption('aggressive', 'no', this)">
+                        <div class="option-radio"></div>
+                        <div class="option-content">
+                            <div class="option-label">No — Peaceful</div>
+                            <div class="option-desc">They were calm or kept their distance</div>
+                        </div>
+                        <div class="option-emoji">😌</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-next" id="btn1Next" disabled onclick="nextStep(2)">
+                    Continue →
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 2: Location -->
+        <div class="form-step" id="step2">
+            <div class="card">
+                <div class="card-title">
+                    <span class="emoji">📍</span>
+                    Location
+                </div>
+                <div class="card-subtitle">
+                    Where were the turkeys spotted? This helps us map turkey population density across New Jersey.
+                </div>
+
+                <button class="gps-btn" id="gpsBtn" onclick="getGPS()">
+                    <span class="gps-icon">📡</span>
+                    <span class="spinner"></span>
+                    Use My Current Location
+                </button>
+
+                <div class="gps-coords" id="gpsCoords"></div>
+
+                <div class="or-divider">or enter manually</div>
+
+                <div class="form-group">
+                    <label class="form-label">County *</label>
+                    <select class="form-select" id="countySelect" onchange="validateStep2()">
+                        <option value="">Select a county...</option>
+                        <option value="Atlantic">Atlantic</option>
+                        <option value="Bergen">Bergen</option>
+                        <option value="Burlington">Burlington</option>
+                        <option value="Camden">Camden</option>
+                        <option value="Cape May">Cape May</option>
+                        <option value="Cumberland">Cumberland</option>
+                        <option value="Essex">Essex</option>
+                        <option value="Gloucester">Gloucester</option>
+                        <option value="Hudson">Hudson</option>
+                        <option value="Hunterdon">Hunterdon</option>
+                        <option value="Mercer">Mercer</option>
+                        <option value="Middlesex">Middlesex</option>
+                        <option value="Monmouth">Monmouth</option>
+                        <option value="Morris">Morris</option>
+                        <option value="Ocean">Ocean</option>
+                        <option value="Passaic">Passaic</option>
+                        <option value="Salem">Salem</option>
+                        <option value="Somerset">Somerset</option>
+                        <option value="Sussex">Sussex</option>
+                        <option value="Union">Union</option>
+                        <option value="Warren">Warren</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Location Details</label>
+                    <input type="text" class="form-input" id="locationDetails" 
+                        placeholder="e.g., Main St near the park, Route 206..."
+                        oninput="validateStep2()">
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-back" onclick="prevStep(1)">← Back</button>
+                <button class="btn btn-next" id="btn2Next" disabled onclick="nextStep(3)">
+                    Continue →
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: Count -->
+        <div class="form-step" id="step3">
+            <div class="card">
+                <div class="card-title">
+                    <span class="emoji">🔢</span>
+                    How Many?
+                </div>
+                <div class="card-subtitle">
+                    Estimate how many turkeys you saw at this location. Your best guess is fine!
+                </div>
+
+                <div class="counter-container">
+                    <button class="counter-btn" onclick="adjustCount(-1)">−</button>
+                    <div class="counter-display" id="countDisplay">1</div>
+                    <button class="counter-btn" onclick="adjustCount(1)">+</button>
+                </div>
+                <div class="counter-label">estimated turkeys</div>
+
+                <div class="quick-counts">
+                    <button class="quick-count-btn" onclick="setCount(1)">Just 1</button>
+                    <button class="quick-count-btn" onclick="setCount(3)">3</button>
+                    <button class="quick-count-btn" onclick="setCount(5)">5</button>
+                    <button class="quick-count-btn" onclick="setCount(10)">10</button>
+                    <button class="quick-count-btn" onclick="setCount(15)">15</button>
+                    <button class="quick-count-btn" onclick="setCount(20)">20+</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Additional Notes (optional)</label>
+                    <textarea class="form-textarea" id="notes" 
+                        placeholder="Any other details... (e.g., hens with poults, tom displaying, near a road, in a yard)"></textarea>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-back" onclick="prevStep(2)">← Back</button>
+                <button class="btn btn-next" onclick="nextStep(4)">
+                    Review →
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 4: Review & Submit -->
+        <div class="form-step" id="step4">
+            <div class="card">
+                <div class="card-title">
+                    <span class="emoji">📋</span>
+                    Review Your Report
+                </div>
+                <div class="card-subtitle">
+                    Please double-check your sighting details before submitting.
+                </div>
+
+                <div class="review-card">
+                    <div class="review-row">
+                        <span class="review-label">Status</span>
+                        <span class="review-value" id="reviewStatus"></span>
+                    </div>
+                    <div class="review-row" id="reviewAggressiveRow">
+                        <span class="review-label">Aggressive</span>
+                        <span class="review-value" id="reviewAggressive"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="review-label">County</span>
+                        <span class="review-value" id="reviewCounty"></span>
+                    </div>
+                    <div class="review-row" id="reviewLocationRow">
+                        <span class="review-label">Location</span>
+                        <span class="review-value" id="reviewLocation"></span>
+                    </div>
+                    <div class="review-row" id="reviewCoordsRow">
+                        <span class="review-label">GPS</span>
+                        <span class="review-value" id="reviewCoords"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="review-label">Count</span>
+                        <span class="review-value" id="reviewCount" style="color: var(--accent-gold);"></span>
+                    </div>
+                    <div class="review-row" id="reviewNotesRow">
+                        <span class="review-label">Notes</span>
+                        <span class="review-value" id="reviewNotes" style="max-width: 60%;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-banner">
+                <span class="info-icon">ℹ️</span>
+                <p>Your report will be added to the NJ Turkey Population Survey spreadsheet. No personal information is collected.</p>
+            </div>
+
+            <div class="nav-buttons" style="flex-direction: column;">
+                <button class="btn btn-submit" onclick="submitReport()">
+                    🦃 Submit Turkey Report
+                </button>
+                <button class="btn btn-back" style="flex: 1;" onclick="prevStep(3)">← Go Back & Edit</button>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">✅</div>
+            <h2>Report Submitted!</h2>
+            <p>Thank you for helping track New Jersey's wild turkey population. Your sighting has been recorded and added to the survey.</p>
+            <button class="btn-new-report" onclick="resetForm()">
+                🦃 Report Another Sighting
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Submitting your report...</div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytCFOi5mJ-M4UJSI_MSGhvC9zwH_sfxpRp3CC-XCSUGryr9JlmMZoVYDtrrMMPQZqRTQ/exec';
+
+        // Form state
+        const formData = {
+            status: '',
+            aggressive: '',
+            county: '',
+            locationDetails: '',
+            latitude: '',
+            longitude: '',
+            estimatedCount: 1,
+            notes: ''
+        };
+
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        // Option selection
+        function selectOption(field, value, element) {
+            formData[field] = value;
+
+            // Clear siblings
+            const parent = element.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+
+            // Handle conditional logic
+            if (field === 'status') {
+                const aggressiveCard = document.getElementById('aggressiveCard');
+                if (value === 'alive') {
+                    aggressiveCard.style.display = 'block';
+                    setTimeout(() => aggressiveCard.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+                } else {
+                    aggressiveCard.style.display = 'none';
+                    formData.aggressive = 'N/A';
+                }
+            }
+
+            validateStep1();
+        }
+
+        // Validation
+        function validateStep1() {
+            const btn = document.getElementById('btn1Next');
+            if (formData.status === 'dead') {
+                btn.disabled = false;
+            } else if (formData.status === 'alive' && formData.aggressive) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        function validateStep2() {
+            formData.county = document.getElementById('countySelect').value;
+            formData.locationDetails = document.getElementById('locationDetails').value;
+            const btn = document.getElementById('btn2Next');
+            btn.disabled = !formData.county;
+        }
+
+        // Navigation
+        function nextStep(step) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+
+            if (step === 4) {
+                populateReview();
+            }
+
+            currentStep = step;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep = step;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const percent = Math.round(((currentStep - 1) / totalSteps) * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('stepLabel').textContent = `Step ${currentStep} of ${totalSteps}`;
+            document.getElementById('stepPercent').textContent = percent + '%';
+        }
+
+        // Counter
+        function adjustCount(delta) {
+            formData.estimatedCount = Math.max(1, Math.min(999, formData.estimatedCount + delta));
+            document.getElementById('countDisplay').textContent = formData.estimatedCount;
+            animateCounter();
+        }
+
+        function setCount(value) {
+            formData.estimatedCount = value;
+            document.getElementById('countDisplay').textContent = value;
+            animateCounter();
+        }
+
+        function animateCounter() {
+            const display = document.getElementById('countDisplay');
+            display.style.transform = 'scale(1.15)';
+            setTimeout(() => display.style.transition = 'transform 0.2s ease', 0);
+            setTimeout(() => display.style.transform = 'scale(1)', 150);
+        }
+
+        // GPS
+        function getGPS() {
+            const btn = document.getElementById('gpsBtn');
+
+            if (!navigator.geolocation) {
+                showToast('GPS not available on this device');
+                return;
+            }
+
+            btn.classList.add('loading');
+            btn.querySelector('.gps-icon').textContent = '';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    formData.latitude = position.coords.latitude.toFixed(6);
+                    formData.longitude = position.coords.longitude.toFixed(6);
+
+                    btn.classList.remove('loading');
+                    btn.classList.add('success');
+                    btn.innerHTML = '<span class="gps-icon">✅</span> Location Captured!';
+
+                    const coordsDiv = document.getElementById('gpsCoords');
+                    coordsDiv.textContent = `📍 Lat: ${formData.latitude}, Lng: ${formData.longitude}`;
+                    coordsDiv.classList.add('visible');
+
+                    validateStep2();
+                },
+                (error) => {
+                    btn.classList.remove('loading');
+                    btn.innerHTML = '<span class="gps-icon">📡</span> Use My Current Location';
+
+                    switch(error.code) {
+                        case 1:
+                            showToast('Location access denied. Please enter manually.');
+                            break;
+                        case 2:
+                            showToast('Location unavailable. Please enter manually.');
+                            break;
+                        case 3:
+                            showToast('Location request timed out. Try again.');
+                            break;
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+            );
+        }
+
+        // Review population
+        function populateReview() {
+            formData.notes = document.getElementById('notes').value;
+
+            const statusEl = document.getElementById('reviewStatus');
+            statusEl.textContent = formData.status === 'alive' ? '🦃 Alive' : '💀 Dead';
+            statusEl.className = 'review-value ' + formData.status;
+
+            const aggRow = document.getElementById('reviewAggressiveRow');
+            const aggEl = document.getElementById('reviewAggressive');
+            if (formData.status === 'alive') {
+                aggRow.style.display = 'flex';
+                aggEl.textContent = formData.aggressive === 'yes' ? '⚠️ Yes' : '✅ No';
+                aggEl.className = 'review-value ' + (formData.aggressive === 'yes' ? 'aggressive' : 'not-aggressive');
+            } else {
+                aggRow.style.display = 'none';
+            }
+
+            document.getElementById('reviewCounty').textContent = formData.county + ' County';
+
+            const locRow = document.getElementById('reviewLocationRow');
+            if (formData.locationDetails) {
+                locRow.style.display = 'flex';
+                document.getElementById('reviewLocation').textContent = formData.locationDetails;
+            } else {
+                locRow.style.display = 'none';
+            }
+
+            const coordsRow = document.getElementById('reviewCoordsRow');
+            if (formData.latitude) {
+                coordsRow.style.display = 'flex';
+                document.getElementById('reviewCoords').textContent = `${formData.latitude}, ${formData.longitude}`;
+            } else {
+                coordsRow.style.display = 'none';
+            }
+
+            document.getElementById('reviewCount').textContent = formData.estimatedCount + (formData.estimatedCount === 1 ? ' turkey' : ' turkeys');
+
+            const notesRow = document.getElementById('reviewNotesRow');
+            if (formData.notes) {
+                notesRow.style.display = 'flex';
+                document.getElementById('reviewNotes').textContent = formData.notes;
+            } else {
+                notesRow.style.display = 'none';
+            }
+        }
+
+        // Submit
+        async function submitReport() {
+            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                showToast('⚠️ Set your Google Script URL first!');
+                console.log('Report data:', JSON.stringify(formData, null, 2));
+                // For testing without Google Sheets, uncomment below:
+                // showSuccess();
+                return;
+            }
+
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('visible');
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // no-cors means we can't read the response, but it will still work
+                showSuccess();
+            } catch (error) {
+                console.error('Submit error:', error);
+                showToast('Error submitting. Please try again.');
+            } finally {
+                overlay.classList.remove('visible');
+            }
+        }
+
+        function showSuccess() {
+            document.getElementById('step4').classList.remove('active');
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('successScreen').classList.add('visible');
+        }
+
+        // Reset
+        function resetForm() {
+            formData.status = '';
+            formData.aggressive = '';
+            formData.county = '';
+            formData.locationDetails = '';
+            formData.latitude = '';
+            formData.longitude = '';
+            formData.estimatedCount = 1;
+            formData.notes = '';
+
+            // Reset UI
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('aggressiveCard').style.display = 'none';
+            document.getElementById('countySelect').value = '';
+            document.getElementById('locationDetails').value = '';
+            document.getElementById('countDisplay').textContent = '1';
+            document.getElementById('notes').value = '';
+            document.getElementById('btn1Next').disabled = true;
+            document.getElementById('btn2Next').disabled = true;
+
+            // Reset GPS
+            const gpsBtn = document.getElementById('gpsBtn');
+            gpsBtn.classList.remove('success', 'loading');
+            gpsBtn.innerHTML = '<span class="gps-icon">📡</span> Use My Current Location';
+            document.getElementById('gpsCoords').classList.remove('visible');
+
+            // Show form
+            document.getElementById('successScreen').classList.remove('visible');
+            document.getElementById('progressContainer').style.display = 'block';
+            currentStep = 1;
+            document.getElementById('step1').classList.add('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 3500);
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
