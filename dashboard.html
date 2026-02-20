@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>NJ Turkey Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-inner: #1c2333;
+            --border: #30363d;
+            --gold: #f5a623;
+            --orange: #e94560;
+            --green: #27ae60;
+            --green-light: #2ecc71;
+            --red: #e74c3c;
+            --red-dark: #c0392b;
+            --blue: #3498db;
+            --purple: #9b59b6;
+            --text: #f0f6fc;
+            --text2: #8b949e;
+            --text3: #6e7681;
+            --radius: 14px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app { max-width: 520px; margin: 0 auto; padding: 16px; padding-bottom: 80px; }
+
+        /* --- SCREENS --- */
+        .screen {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 60vh; text-align: center; padding: 40px 20px;
+        }
+        .screen h2 { font-size: 22px; margin: 12px 0 8px; font-weight: 800; }
+        .screen p { color: var(--text2); font-size: 14px; line-height: 1.6; max-width: 300px; }
+        .screen-icon { font-size: 64px; margin-bottom: 8px; }
+
+        .loader-spin {
+            width: 40px; height: 40px; border: 3px solid var(--border);
+            border-top-color: var(--gold); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin: 20px 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .pulse { animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        .retry-btn {
+            margin-top: 20px; padding: 12px 32px; background: var(--gold); color: var(--bg);
+            border: none; border-radius: 10px; font-family: inherit;
+            font-size: 15px; font-weight: 800; cursor: pointer;
+        }
+
+        /* --- HEADER --- */
+        .dash-header { text-align: center; padding: 20px 0 8px; }
+        .dash-header .icon { font-size: 48px; }
+        .dash-header h1 {
+            font-size: 24px; font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dash-header .sub { color: var(--text3); font-size: 12px; font-weight: 600; margin-top: 4px; }
+
+        .refresh-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 16px; background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 10px; margin: 16px 0; font-size: 12px; color: var(--text3);
+        }
+        .refresh-btn {
+            padding: 6px 14px; background: var(--bg-inner); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text2); font-family: inherit;
+            font-size: 12px; font-weight: 700; cursor: pointer;
+        }
+        .refresh-btn:active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+
+        /* --- STATS GRID --- */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 18px 16px; position: relative; overflow: hidden;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        }
+        .stat-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--orange)); }
+        .stat-card.green::before { background: linear-gradient(90deg, var(--green), var(--green-light)); }
+        .stat-card.red::before { background: linear-gradient(90deg, var(--red), var(--orange)); }
+        .stat-card.blue::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+
+        .stat-emoji { font-size: 22px; margin-bottom: 6px; }
+        .stat-number { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+        .stat-label { font-size: 11px; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-sub { font-size: 11px; color: var(--text2); margin-top: 4px; font-weight: 600; }
+
+        .stat-number.gold { color: var(--gold); }
+        .stat-number.green { color: var(--green-light); }
+        .stat-number.red { color: var(--red); }
+        .stat-number.blue { color: var(--blue); }
+
+        /* --- SECTIONS --- */
+        .section {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: 16px; font-weight: 800; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title .emoji { font-size: 20px; }
+        .section-sub { font-size: 12px; color: var(--text3); margin-bottom: 16px; }
+
+        /* --- PROPORTION BAR --- */
+        .prop-bar {
+            display: flex; height: 36px; border-radius: 10px; overflow: hidden;
+            margin-bottom: 12px; font-size: 13px; font-weight: 800;
+        }
+        .prop-alive {
+            background: linear-gradient(90deg, #1a7a42, var(--green));
+            display: flex; align-items: center; justify-content: center; color: white;
+            transition: width 1s ease; min-width: 0;
+        }
+        .prop-dead {
+            background: linear-gradient(90deg, var(--red), #a93226);
+            display: flex; align-items: center; justify-content: center; color: white;
+            transition: width 1s ease; min-width: 0;
+        }
+        .prop-legend {
+            display: flex; justify-content: space-between; font-size: 12px; color: var(--text2);
+        }
+        .prop-legend span { display: flex; align-items: center; gap: 4px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .dot.green { background: var(--green); }
+        .dot.red { background: var(--red); }
+
+        .stat-row {
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px solid var(--border); font-size: 13px;
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-row .label { color: var(--text3); font-weight: 600; }
+        .stat-row .val { font-weight: 800; }
+
+        /* --- CHART TABS --- */
+        .chart-tabs {
+            display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .chart-tabs::-webkit-scrollbar { display: none; }
+
+        .chart-tab {
+            padding: 8px 14px; background: var(--bg-inner); border: 1px solid var(--border);
+            border-radius: 20px; color: var(--text3); font-family: inherit;
+            font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .chart-tab.active {
+            background: var(--gold); color: var(--bg); border-color: var(--gold);
+        }
+        .chart-tab.active.red-tab { background: var(--red); border-color: var(--red); color: white; }
+        .chart-tab.active.orange-tab { background: var(--orange); border-color: var(--orange); color: white; }
+
+        /* --- BAR CHART --- */
+        .bar-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 6px 0; animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+
+        .bar-rank {
+            width: 20px; font-size: 11px; color: var(--text3);
+            font-weight: 800; text-align: center; flex-shrink: 0;
+        }
+        .bar-label {
+            width: 85px; font-size: 12px; font-weight: 700;
+            text-align: right; flex-shrink: 0; color: var(--text2);
+        }
+        .bar-track {
+            flex: 1; height: 22px; background: rgba(255,255,255,0.04);
+            border-radius: 6px; overflow: hidden; position: relative;
+        }
+        .bar-fill {
+            height: 100%; border-radius: 6px; width: 0;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .bar-fill.gold-bar { background: linear-gradient(90deg, #c78b1e, var(--gold)); }
+        .bar-fill.red-bar { background: linear-gradient(90deg, var(--red-dark), var(--red)); }
+        .bar-fill.orange-bar { background: linear-gradient(90deg, #c0392b, var(--orange)); }
+        .bar-fill.green-bar { background: linear-gradient(90deg, #1a7a42, var(--green)); }
+
+        .bar-value {
+            width: 44px; font-size: 13px; font-weight: 800;
+            text-align: right; flex-shrink: 0;
+        }
+        .bar-badges {
+            display: flex; gap: 3px; flex-shrink: 0; width: 36px;
+        }
+        .mini-badge {
+            font-size: 10px; padding: 1px 4px; border-radius: 4px;
+            font-weight: 800; line-height: 1.4;
+        }
+        .mini-badge.dead-b { background: rgba(231,76,60,0.2); color: var(--red); }
+        .mini-badge.aggr-b { background: rgba(233,69,96,0.2); color: var(--orange); }
+
+        .no-data-msg {
+            text-align: center; padding: 30px; color: var(--text3);
+            font-size: 14px; font-weight: 600;
+        }
+
+        /* --- HEATMAP GRID --- */
+        .heat-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .heat-tile {
+            border-radius: 10px; padding: 12px 10px; text-align: center;
+            border: 1px solid var(--border); transition: all 0.3s;
+            cursor: default; position: relative; overflow: hidden;
+        }
+        .heat-name { font-size: 11px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+        .heat-count { font-size: 18px; font-weight: 900; }
+        .heat-sub { font-size: 9px; color: rgba(255,255,255,0.5); font-weight: 600; margin-top: 1px; }
+        .heat-empty { opacity: 0.3; }
+        .heat-tile.has-dead .heat-name::after {
+            content: '💀'; font-size: 8px; margin-left: 3px;
+        }
+        .heat-tile.has-aggressive .heat-name::before {
+            content: '⚠️'; font-size: 8px; margin-right: 3px;
+        }
+
+        /* --- INSIGHTS --- */
+        .insight {
+            display: flex; gap: 12px; padding: 12px 14px;
+            background: var(--bg-inner); border-radius: 10px;
+            margin-bottom: 8px; align-items: flex-start;
+            border-left: 3px solid var(--border);
+        }
+        .insight.warn { border-left-color: var(--orange); }
+        .insight.danger { border-left-color: var(--red); }
+        .insight.good { border-left-color: var(--green); }
+        .insight.info { border-left-color: var(--blue); }
+        .insight .i-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+        .insight .i-text { font-size: 13px; color: var(--text2); line-height: 1.5; font-weight: 600; }
+        .insight .i-text strong { color: var(--text); }
+
+        /* --- AGGRESSION LIST --- */
+        .aggr-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .aggr-row:last-child { border-bottom: none; }
+        .aggr-indicator {
+            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+        }
+        .aggr-indicator.high { background: var(--red); box-shadow: 0 0 8px rgba(231,76,60,0.5); }
+        .aggr-indicator.mid { background: var(--orange); box-shadow: 0 0 8px rgba(233,69,96,0.4); }
+        .aggr-indicator.low { background: var(--gold); }
+        .aggr-indicator.safe { background: var(--green); }
+        .aggr-county { flex: 1; font-size: 14px; font-weight: 700; }
+        .aggr-rate { font-size: 14px; font-weight: 800; }
+        .aggr-detail { font-size: 11px; color: var(--text3); font-weight: 600; }
+
+        /* --- RECENT FEED --- */
+        .feed-item {
+            display: flex; gap: 12px; padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04); align-items: flex-start;
+        }
+        .feed-item:last-child { border-bottom: none; }
+        .feed-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+        .feed-body { flex: 1; }
+        .feed-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+        .feed-meta { font-size: 11px; color: var(--text3); font-weight: 600; }
+        .feed-badges { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+        .badge {
+            padding: 2px 8px; border-radius: 6px; font-size: 10px;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;
+        }
+        .badge.alive { background: rgba(39,174,96,0.15); color: var(--green-light); }
+        .badge.dead { background: rgba(231,76,60,0.15); color: var(--red); }
+        .badge.aggressive { background: rgba(233,69,96,0.15); color: var(--orange); }
+        .badge.peaceful { background: rgba(39,174,96,0.1); color: var(--green); }
+        .badge.count { background: rgba(245,166,35,0.15); color: var(--gold); }
+
+        /* --- FOOTER --- */
+        .dash-footer {
+            text-align: center; padding: 24px 0 16px;
+            font-size: 11px; color: var(--text3);
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-up {
+            opacity: 0; transform: translateY(16px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: none; }
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+        .delay-6 { animation-delay: 0.6s; }
+        .delay-7 { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- LOADING -->
+    <div class="screen" id="loadingScreen">
+        <div class="screen-icon pulse">🦃</div>
+        <div class="loader-spin"></div>
+        <h2>Loading Dashboard</h2>
+        <p>Fetching turkey data from the survey...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="screen" id="errorScreen" style="display:none">
+        <div class="screen-icon">😵</div>
+        <h2>Couldn't Load Data</h2>
+        <p id="errorMsg">Check your internet connection and make sure the Google Script URL is set.</p>
+        <button class="retry-btn" onclick="loadDashboard()">🔄 Try Again</button>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="screen" id="emptyScreen" style="display:none">
+        <div class="screen-icon pulse">🦃</div>
+        <h2>No Sightings Yet</h2>
+        <p>Be the first to report a turkey sighting! Once reports come in, this dashboard will light up with data.</p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" style="display:none">
+
+        <div class="dash-header">
+            <div class="icon">🦃</div>
+            <h1>NJ Turkey Dashboard</h1>
+            <div class="sub">Wild Turkey Population Survey Analytics</div>
+        </div>
+
+        <div class="refresh-bar">
+            <span>Updated: <span id="lastUpdated">—</span></span>
+            <button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stats-grid fade-up delay-1">
+            <div class="stat-card blue">
+                <div class="stat-emoji">📊</div>
+                <div class="stat-number blue" id="statReports">0</div>
+                <div class="stat-label">Total Reports</div>
+            </div>
+            <div class="stat-card gold">
+                <div class="stat-emoji">🦃</div>
+                <div class="stat-number gold" id="statTurkeys">0</div>
+                <div class="stat-label">Est. Turkeys</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-emoji">💓</div>
+                <div class="stat-number green" id="statAlive">0%</div>
+                <div class="stat-label">Alive Rate</div>
+                <div class="stat-sub" id="statAliveSub"></div>
+            </div>
+            <div class="stat-card red">
+                <div class="stat-emoji">⚠️</div>
+                <div class="stat-number red" id="statAggr">0%</div>
+                <div class="stat-label">Aggression Rate</div>
+                <div class="stat-sub" id="statAggrSub"></div>
+            </div>
+        </div>
+
+        <!-- ALIVE VS DEAD -->
+        <div class="section fade-up delay-2" id="statusSection">
+            <div class="section-title"><span class="emoji">💀</span> Alive vs Dead</div>
+            <div class="section-sub">Proportion of sighting reports by turkey status</div>
+            <div class="prop-bar">
+                <div class="prop-alive" id="propAlive" style="width:100%">100%</div>
+                <div class="prop-dead" id="propDead" style="width:0%"></div>
+            </div>
+            <div class="prop-legend">
+                <span><span class="dot green"></span> <span id="legendAlive">0 alive</span></span>
+                <span><span class="dot red"></span> <span id="legendDead">0 dead</span></span>
+            </div>
+            <div style="margin-top: 12px;">
+                <div class="stat-row">
+                    <span class="label">Living turkeys (est.)</span>
+                    <span class="val" id="aliveTurkeys" style="color:var(--green-light)">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Dead turkeys (est.)</span>
+                    <span class="val" id="deadTurkeys" style="color:var(--red)">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Aggressive encounters</span>
+                    <span class="val" id="aggrCount" style="color:var(--orange)">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">Peaceful encounters</span>
+                    <span class="val" id="peaceCount" style="color:var(--green)">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COUNTY RANKINGS -->
+        <div class="section fade-up delay-3" id="countySection">
+            <div class="section-title"><span class="emoji">📍</span> County Rankings</div>
+            <div class="section-sub">Tap a view to sort by different metrics</div>
+            <div class="chart-tabs">
+                <button class="chart-tab active" onclick="switchTab(this,'population')">🦃 Population</button>
+                <button class="chart-tab orange-tab" onclick="switchTab(this,'aggression')">⚠️ Aggression</button>
+                <button class="chart-tab red-tab" onclick="switchTab(this,'mortality')">💀 Mortality</button>
+                <button class="chart-tab" onclick="switchTab(this,'sightings')">📊 Reports</button>
+            </div>
+            <div id="countyBars"></div>
+        </div>
+
+        <!-- COUNTY HEATMAP -->
+        <div class="section fade-up delay-4">
+            <div class="section-title"><span class="emoji">🗺️</span> County Heatmap</div>
+            <div class="section-sub">Brighter = more turkeys spotted. Icons show ⚠️ aggression and 💀 deaths.</div>
+            <div class="heat-grid" id="heatGrid"></div>
+        </div>
+
+        <!-- KEY INSIGHTS -->
+        <div class="section fade-up delay-5">
+            <div class="section-title"><span class="emoji">💡</span> Key Insights</div>
+            <div class="section-sub">Auto-generated patterns from your data</div>
+            <div id="insightsContainer"></div>
+        </div>
+
+        <!-- AGGRESSION ANALYSIS -->
+        <div class="section fade-up delay-6" id="aggrSection">
+            <div class="section-title"><span class="emoji">🚨</span> Aggression by County</div>
+            <div class="section-sub">Counties ranked by % of alive sightings involving aggressive turkeys</div>
+            <div id="aggrList"></div>
+        </div>
+
+        <!-- RECENT SIGHTINGS -->
+        <div class="section fade-up delay-7">
+            <div class="section-title"><span class="emoji">🕐</span> Recent Reports</div>
+            <div class="section-sub">Latest turkey sighting submissions</div>
+            <div id="recentFeed"></div>
+        </div>
+
+        <div class="dash-footer">
+            🦃 NJ Turkey Population Survey<br>
+            Data auto-refreshes every 2 minutes
+        </div>
+    </div>
+</div>
+
+<script>
+
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw98AsPluQj6iBUyqE7Tzy5aJoO3NbuDzq6KGYSXKplV_XRj34npq_zFRMH323REqAc0g/exec';
+
+
+let currentData = null;
+let currentSort = 'population';
+
+// ---- LOAD DATA ----
+async function loadDashboard() {
+    if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+        showScreen('errorScreen');
+        document.getElementById('errorMsg').textContent =
+            'Set your Google Script URL in the dashboard code first.';
+        return;
+    }
+
+    showScreen('loadingScreen');
+
+    try {
+        const response = await fetch(SCRIPT_URL, { redirect: 'follow' });
+        const data = await response.json();
+
+        if (data.error && data.totalSightings === 0) {
+            showScreen('emptyScreen');
+            return;
+        }
+        if (data.totalSightings === 0) {
+            showScreen('emptyScreen');
+            return;
+        }
+
+        currentData = data;
+        renderDashboard(data);
+        showScreen('dashboard');
+
+    } catch (err) {
+        console.error('Dashboard fetch error:', err);
+        showScreen('errorScreen');
+        document.getElementById('errorMsg').textContent =
+            'Failed to load data. Check your Script URL and deployment settings. Error: ' + err.message;
+    }
+}
+
+function showScreen(id) {
+    ['loadingScreen', 'errorScreen', 'emptyScreen', 'dashboard'].forEach(s => {
+        document.getElementById(s).style.display = s === id ? (id === 'dashboard' ? 'block' : 'flex') : 'none';
+    });
+}
+
+// ---- RENDER EVERYTHING ----
+function renderDashboard(d) {
+    // Stats
+    document.getElementById('statReports').textContent = d.totalSightings.toLocaleString();
+    document.getElementById('statTurkeys').textContent = d.totalTurkeys.toLocaleString();
+
+    const aliveRate = d.totalSightings > 0 ? (d.aliveReports / d.totalSightings * 100) : 0;
+    document.getElementById('statAlive').textContent = aliveRate.toFixed(0) + '%';
+    document.getElementById('statAliveSub').textContent =
+        d.aliveReports + ' alive / ' + d.deadReports + ' dead';
+
+    const aggrRate = d.aliveReports > 0 ? (d.aggressiveReports / d.aliveReports * 100) : 0;
+    document.getElementById('statAggr').textContent = aggrRate.toFixed(0) + '%';
+    document.getElementById('statAggrSub').textContent =
+        d.aggressiveReports + ' of ' + d.aliveReports + ' alive';
+
+    // Color alive rate based on value
+    const aliveEl = document.getElementById('statAlive');
+    aliveEl.className = 'stat-number ' + (aliveRate >= 70 ? 'green' : aliveRate >= 40 ? 'gold' : 'red');
+
+    // Status bar
+    renderStatusBar(d);
+
+    // County chart
+    renderCountyChart(d, currentSort);
+
+    // Heatmap
+    renderHeatmap(d);
+
+    // Insights
+    renderInsights(d);
+
+    // Aggression list
+    renderAggressionList(d);
+
+    // Recent feed
+    renderRecentFeed(d);
+
+    // Last updated
+    document.getElementById('lastUpdated').textContent = d.lastUpdated || 'Just now';
+}
+
+// ---- STATUS BAR ----
+function renderStatusBar(d) {
+    const total = d.aliveReports + d.deadReports;
+    const alivePct = total > 0 ? (d.aliveReports / total * 100) : 100;
+    const deadPct = total > 0 ? (d.deadReports / total * 100) : 0;
+
+    const aliveBar = document.getElementById('propAlive');
+    const deadBar = document.getElementById('propDead');
+
+    aliveBar.style.width = alivePct + '%';
+    aliveBar.textContent = alivePct >= 10 ? alivePct.toFixed(0) + '%' : '';
+    deadBar.style.width = deadPct + '%';
+    deadBar.textContent = deadPct >= 10 ? deadPct.toFixed(0) + '%' : '';
+
+    document.getElementById('legendAlive').textContent = d.aliveReports + ' alive reports';
+    document.getElementById('legendDead').textContent = d.deadReports + ' dead reports';
+    document.getElementById('aliveTurkeys').textContent = d.aliveTurkeys.toLocaleString();
+    document.getElementById('deadTurkeys').textContent = d.deadTurkeys.toLocaleString();
+    document.getElementById('aggrCount').textContent = d.aggressiveReports.toLocaleString();
+    document.getElementById('peaceCount').textContent = d.peacefulReports.toLocaleString();
+}
+
+// ---- COUNTY BAR CHART ----
+function switchTab(el, sort) {
+    document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    currentSort = sort;
+    if (currentData) renderCountyChart(currentData, sort);
+}
+
+function renderCountyChart(d, sortBy) {
+    const container = document.getElementById('countyBars');
+    let entries = Object.entries(d.counties).filter(([_, c]) => c.sightings > 0);
+
+    if (entries.length === 0) {
+        container.innerHTML = '<div class="no-data-msg">No county data yet</div>';
+        return;
+    }
+
+    let getValue, barClass, maxVal;
+
+    switch (sortBy) {
+        case 'aggression':
+            entries = entries.filter(([_, c]) => c.alive > 0);
+            entries.sort((a, b) => {
+                const ra = a[1].alive > 0 ? a[1].aggressive / a[1].alive : 0;
+                const rb = b[1].alive > 0 ? b[1].aggressive / b[1].alive : 0;
+                return rb - ra;
+            });
+            getValue = c => c.alive > 0 ? (c.aggressive / c.alive * 100) : 0;
+            maxVal = 100;
+            barClass = 'orange-bar';
+            break;
+        case 'mortality':
+            entries.sort((a, b) => b[1].deadTurkeys - a[1].deadTurkeys);
+            getValue = c => c.deadTurkeys;
+            maxVal = Math.max(...entries.map(([_, c]) => c.deadTurkeys), 1);
+            barClass = 'red-bar';
+            break;
+        case 'sightings':
+            entries.sort((a, b) => b[1].sightings - a[1].sightings);
+            getValue = c => c.sightings;
+            maxVal = Math.max(...entries.map(([_, c]) => c.sightings), 1);
+            barClass = 'green-bar';
+            break;
+        default: // population
+            entries.sort((a, b) => b[1].totalTurkeys - a[1].totalTurkeys);
+            getValue = c => c.totalTurkeys;
+            maxVal = Math.max(...entries.map(([_, c]) => c.totalTurkeys), 1);
+            barClass = 'gold-bar';
+    }
+
+    let html = '';
+    entries.forEach(([name, c], i) => {
+        const val = getValue(c);
+        const pct = sortBy === 'aggression' ? val : (maxVal > 0 ? (val / maxVal * 100) : 0);
+        const display = sortBy === 'aggression' ? val.toFixed(0) + '%' : val.toLocaleString();
+
+        let badges = '';
+        if (sortBy === 'population') {
+            if (c.dead > 0) badges += `<span class="mini-badge dead-b">${c.deadTurkeys}💀</span>`;
+            if (c.aggressive > 0) badges += `<span class="mini-badge aggr-b">${c.aggressive}⚠️</span>`;
+        }
+
+        html += `
+            <div class="bar-row" style="animation-delay: ${i * 0.04}s">
+                <span class="bar-rank">${i + 1}</span>
+                <span class="bar-label">${name}</span>
+                <div class="bar-track">
+                    <div class="bar-fill ${barClass}" data-pct="${pct}"></div>
+                </div>
+                <span class="bar-value">${display}</span>
+                <div class="bar-badges">${badges}</div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+
+    // Animate bars
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            container.querySelectorAll('.bar-fill').forEach((bar, i) => {
+                setTimeout(() => {
+                    bar.style.width = bar.dataset.pct + '%';
+                }, i * 40);
+            });
+        });
+    });
+}
+
+// ---- HEATMAP ----
+function renderHeatmap(d) {
+    const grid = document.getElementById('heatGrid');
+    const entries = Object.entries(d.counties).sort((a, b) => b[1].totalTurkeys - a[1].totalTurkeys);
+    const maxTurkeys = Math.max(...entries.map(([_, c]) => c.totalTurkeys), 1);
+
+    let html = '';
+    entries.forEach(([name, c]) => {
+        const intensity = c.totalTurkeys > 0 ? Math.max(0.08, c.totalTurkeys / maxTurkeys) : 0;
+        const r = Math.round(245 * intensity);
+        const g = Math.round(166 * intensity * 0.7);
+        const b2 = Math.round(35 * intensity * 0.3);
+        const bgColor = c.totalTurkeys > 0
+            ? `rgba(${r}, ${g}, ${b2}, ${Math.min(intensity + 0.1, 0.6)})`
+            : 'rgba(255,255,255,0.02)';
+
+        const classes = [
+            'heat-tile',
+            c.totalTurkeys === 0 ? 'heat-empty' : '',
+            c.deadTurkeys > 0 ? 'has-dead' : '',
+            c.aggressive > 0 ? 'has-aggressive' : ''
+        ].filter(Boolean).join(' ');
+
+        html += `
+            <div class="${classes}" style="background: ${bgColor}">
+                <div class="heat-name">${name}</div>
+                <div class="heat-count" style="color: ${c.totalTurkeys > 0 ? 'var(--gold)' : 'var(--text3)'}">${c.totalTurkeys}</div>
+                <div class="heat-sub">${c.sightings} report${c.sightings !== 1 ? 's' : ''}</div>
+            </div>
+        `;
+    });
+
+    grid.innerHTML = html;
+}
+
+// ---- INSIGHTS ----
+function renderInsights(d) {
+    const container = document.getElementById('insightsContainer');
+    const insights = [];
+
+    // Top county
+    const byPop = Object.entries(d.counties)
+        .filter(([_, c]) => c.totalTurkeys > 0)
+        .sort((a, b) => b[1].totalTurkeys - a[1].totalTurkeys);
+
+    if (byPop.length > 0) {
+        const [name, c] = byPop[0];
+        insights.push({
+            icon: '🏆', type: 'info',
+            text: `<strong>${name} County</strong> leads with an estimated <strong>${c.totalTurkeys} turkeys</strong> from ${c.sightings} sighting reports.`
+        });
+    }
+
+    // Aggression hotspot
+    const byAggr = Object.entries(d.counties)
+        .filter(([_, c]) => c.alive >= 2 && c.aggressive > 0)
+        .map(([name, c]) => ({ name, rate: c.aggressive / c.alive * 100, c }))
+        .sort((a, b) => b.rate - a.rate);
+
+    if (byAggr.length > 0 && byAggr[0].rate > 0) {
+        const worst = byAggr[0];
+        const type = worst.rate >= 50 ? 'danger' : worst.rate >= 25 ? 'warn' : 'info';
+        insights.push({
+            icon: '⚠️', type,
+            text: `<strong>${worst.name} County</strong> has the highest aggression rate at <strong>${worst.rate.toFixed(0)}%</strong> (${worst.c.aggressive} of ${worst.c.alive} alive sightings).`
+        });
+    }
+
+    // Overall aggression
+    if (d.aliveReports >= 5) {
+        const overall = (d.aggressiveReports / d.aliveReports * 100);
+        if (overall >= 30) {
+            insights.push({
+                icon: '🚨', type: 'danger',
+                text: `Statewide aggression rate is <strong>${overall.toFixed(0)}%</strong> — nearly 1 in 3 alive turkey sightings involve aggressive behavior.`
+            });
+        } else if (overall >= 15) {
+            insights.push({
+                icon: '📈', type: 'warn',
+                text: `Statewide aggression rate is <strong>${overall.toFixed(0)}%</strong> across ${d.aliveReports} alive sightings.`
+            });
+        }
+    }
+
+    // Most dead turkeys
+    const byDead = Object.entries(d.counties)
+        .filter(([_, c]) => c.deadTurkeys > 0)
+        .sort((a, b) => b[1].deadTurkeys - a[1].deadTurkeys);
+
+    if (byDead.length > 0) {
+        insights.push({
+            icon: '💀', type: 'danger',
+            text: `Most dead turkeys found in <strong>${byDead[0][0]} County</strong> — ${byDead[0][1].deadTurkeys} deceased turkeys from ${byDead[0][1].dead} reports.`
+        });
+    }
+
+    // Safest county (most sightings, zero aggression)
+    const safest = Object.entries(d.counties)
+        .filter(([_, c]) => c.alive >= 3 && c.aggressive === 0)
+        .sort((a, b) => b[1].aliveTurkeys - a[1].aliveTurkeys);
+
+    if (safest.length > 0) {
+        insights.push({
+            icon: '🕊️', type: 'good',
+            text: `<strong>${safest[0][0]} County</strong> reports ${safest[0][1].alive} alive sightings with <strong>zero aggressive encounters</strong>.`
+        });
+    }
+
+    // Counties with data
+    const activeCounties = Object.values(d.counties).filter(c => c.sightings > 0).length;
+    insights.push({
+        icon: '🗺️', type: 'info',
+        text: `Turkey sightings reported in <strong>${activeCounties} of 21</strong> New Jersey counties so far.`
+    });
+
+    // Flock size
+    if (d.totalSightings > 0) {
+        const avgFlock = (d.totalTurkeys / d.totalSightings).toFixed(1);
+        insights.push({
+            icon: '📐', type: 'info',
+            text: `Average flock size across all reports: <strong>${avgFlock} turkeys</strong> per sighting.`
+        });
+    }
+
+    container.innerHTML = insights.map(ins => `
+        <div class="insight ${ins.type}">
+            <span class="i-icon">${ins.icon}</span>
+            <span class="i-text">${ins.text}</span>
+        </div>
+    `).join('');
+}
+
+// ---- AGGRESSION LIST ----
+function renderAggressionList(d) {
+    const container = document.getElementById('aggrList');
+    const entries = Object.entries(d.counties)
+        .filter(([_, c]) => c.alive > 0)
+        .map(([name, c]) => ({
+            name,
+            rate: c.alive > 0 ? (c.aggressive / c.alive * 100) : 0,
+            aggressive: c.aggressive,
+            alive: c.alive
+        }))
+        .sort((a, b) => b.rate - a.rate);
+
+    if (entries.length === 0) {
+        container.innerHTML = '<div class="no-data-msg">No alive turkey sightings yet</div>';
+        return;
+    }
+
+    container.innerHTML = entries.map(e => {
+        let level, color;
+        if (e.rate >= 50) { level = 'high'; color = 'var(--red)'; }
+        else if (e.rate >= 25) { level = 'mid'; color = 'var(--orange)'; }
+        else if (e.rate > 0) { level = 'low'; color = 'var(--gold)'; }
+        else { level = 'safe'; color = 'var(--green)'; }
+
+        return `
+            <div class="aggr-row">
+                <div class="aggr-indicator ${level}"></div>
+                <div style="flex:1">
+                    <div class="aggr-county">${e.name}</div>
+                    <div class="aggr-detail">${e.aggressive} aggressive of ${e.alive} alive sightings</div>
+                </div>
+                <div class="aggr-rate" style="color: ${color}">${e.rate.toFixed(0)}%</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ---- RECENT FEED ----
+function renderRecentFeed(d) {
+    const container = document.getElementById('recentFeed');
+
+    if (!d.recentSightings || d.recentSightings.length === 0) {
+        container.innerHTML = '<div class="no-data-msg">No reports yet</div>';
+        return;
+    }
+
+    container.innerHTML = d.recentSightings.slice(0, 10).map(s => {
+        const icon = s.status.toLowerCase() === 'dead' ? '💀' : '🦃';
+        const statusBadge = s.status.toLowerCase() === 'dead'
+            ? '<span class="badge dead">Dead</span>'
+            : '<span class="badge alive">Alive</span>';
+
+        let aggrBadge = '';
+        if (s.status.toLowerCase() === 'alive') {
+            aggrBadge = s.aggressive.toLowerCase() === 'yes'
+                ? '<span class="badge aggressive">Aggressive</span>'
+                : '<span class="badge peaceful">Peaceful</span>';
+        }
+
+        const countBadge = `<span class="badge count">${s.count} turkey${s.count !== 1 ? 's' : ''}</span>`;
+        const location = s.location ? ` · ${s.location}` : '';
+
+        return `
+            <div class="feed-item">
+                <div class="feed-icon">${icon}</div>
+                <div class="feed-body">
+                    <div class="feed-title">${s.county} County</div>
+                    <div class="feed-meta">${s.timestamp}${location}</div>
+                    <div class="feed-badges">${statusBadge}${aggrBadge}${countBadge}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ---- INIT ----
+loadDashboard();
+
+// Auto-refresh every 2 minutes
+setInterval(loadDashboard, 120000);
+</script>
+</body>
+</html>
