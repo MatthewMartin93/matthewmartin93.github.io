@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Youth Counterculture Movement</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --ink: #1a1510;
+    --rust: #c94a2b;
+    --gold: #d4a017;
+    --faded: #8b7355;
+    --sage: #5c7a5a;
+    --newsprint: #ede8dc;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 3px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    padding: 4rem 3rem 4rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 3px solid var(--ink);
+    position: relative;
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 12px,
+      rgba(255,255,255,0.015) 12px,
+      rgba(255,255,255,0.015) 13px
+    );
+  }
+
+  .dateline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .dateline::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-issue {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--rust);
+    display: block;
+  }
+
+  .hero-deck {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.75);
+    max-width: 38ch;
+    border-left: 2px solid var(--rust);
+    padding-left: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--faded);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .hero-meta i { color: var(--gold); }
+
+  .hero-right {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    background: var(--newsprint);
+  }
+
+  .hero-right .big-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(8rem, 20vw, 18rem);
+    font-weight: 900;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--ink);
+    position: absolute;
+    bottom: -2rem;
+    right: -1rem;
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .quick-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .quick-facts h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+
+  .fact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(26,21,16,0.15);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .fact-item:nth-child(2) { animation-delay: 0.1s; }
+  .fact-item:nth-child(3) { animation-delay: 0.2s; }
+  .fact-item:nth-child(4) { animation-delay: 0.3s; }
+  .fact-item:nth-child(5) { animation-delay: 0.4s; }
+
+  .fact-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    background: var(--ink);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .fact-icon.rust { background: var(--rust); }
+  .fact-icon.gold { background: var(--gold); color: var(--ink); }
+  .fact-icon.sage { background: var(--sage); }
+
+  .fact-text strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+  }
+
+  .fact-text span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--faded);
+    letter-spacing: 0.03em;
+  }
+
+  .hero-pullquote {
+    background: var(--rust);
+    color: var(--cream);
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .hero-pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-pullquote cite {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .hero-pullquote::before {
+    content: '\201C';
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    opacity: 0.2;
+    line-height: 1;
+  }
+
+  /* ─── NAV STRIP ─── */
+  .nav-strip {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.75rem 4rem;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--rust);
+    overflow-x: auto;
+  }
+
+  .nav-strip a {
+    color: rgba(245,240,232,0.6);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 1.25rem;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    white-space: nowrap;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-strip a:first-child { padding-left: 0; }
+  .nav-strip a:hover { color: var(--gold); }
+
+  /* ─── SECTION LAYOUT ─── */
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .section-label .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--rust);
+  }
+
+  .section-label h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.25;
+  }
+
+  /* ─── GOALS ─── */
+  #goals { border-top: 3px solid var(--ink); }
+
+  .issues-goals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 2px solid var(--ink);
+  }
+
+  .issues-col, .goals-col {
+    padding: 2.5rem;
+  }
+
+  .issues-col {
+    border-right: 2px solid var(--ink);
+    background: var(--newsprint);
+  }
+
+  .col-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .col-header i { color: var(--rust); }
+
+  .issue-card {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed rgba(26,21,16,0.2);
+  }
+
+  .issue-card:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .issue-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .issue-card h4 i { color: var(--rust); font-size: 0.8rem; }
+
+  .issue-card p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: rgba(26,21,16,0.75);
+  }
+
+  .goal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px dashed rgba(26,21,16,0.2);
+  }
+
+  .goal-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .goal-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 2rem;
+    opacity: 0.7;
+  }
+
+  .goal-item h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .goal-item p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(26,21,16,0.7);
+  }
+
+  /* ─── LEADERS ─── */
+  #leaders { background: var(--ink); color: var(--cream); }
+  #leaders .section-label h2 { color: var(--cream); }
+  #leaders .section-label::after { background: var(--cream); }
+
+  .leaders-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(245,240,232,0.15);
+    border: 1px solid rgba(245,240,232,0.15);
+  }
+
+  .leader-card {
+    background: var(--ink);
+    padding: 2rem;
+    position: relative;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .leader-card:hover { background: rgba(245,240,232,0.05); }
+
+  .leader-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .leader-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .leader-desc {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: rgba(245,240,232,0.6);
+  }
+
+  .leader-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--rust);
+    transition: width 0.3s ease;
+  }
+
+  .leader-card:hover::after { width: 100%; }
+
+  /* ─── EVENTS ─── */
+  #events { border-top: 3px solid var(--ink); }
+
+  .events-timeline {
+    position: relative;
+    padding-left: 3rem;
+  }
+
+  .events-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--rust), var(--gold), var(--sage));
+  }
+
+  .event-item {
+    position: relative;
+    margin-bottom: 4rem;
+  }
+
+  .event-item:last-child { margin-bottom: 0; }
+
+  .event-dot {
+    position: absolute;
+    left: -2.7rem;
+    top: 0.4rem;
+    width: 1rem;
+    height: 1rem;
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  .event-item:nth-child(1) .event-dot { border-color: var(--rust); background: var(--rust); }
+  .event-item:nth-child(2) .event-dot { border-color: var(--gold); background: var(--gold); }
+  .event-item:nth-child(3) .event-dot { border-color: var(--sage); background: var(--sage); }
+  .event-item:nth-child(4) .event-dot { border-color: var(--faded); background: var(--faded); }
+
+  .event-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .event-date i { font-size: 0.7rem; }
+
+  .event-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .event-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .event-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.3rem 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .event-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    border-left: 3px solid rgba(26,21,16,0.12);
+    padding-left: 1.5rem;
+  }
+
+  .event-body p {
+    font-size: 0.925rem;
+    line-height: 1.75;
+    color: rgba(26,21,16,0.8);
+  }
+
+  .event-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: rgba(26,21,16,0.7);
+  }
+
+  .detail-row i {
+    color: var(--rust);
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    min-width: 1rem;
+  }
+
+  /* ─── IDENTITY STRIP ─── */
+  .identity-strip {
+    background: var(--rust);
+    color: var(--cream);
+    border-top: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
+    padding: 3rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 2px 1fr 2px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .identity-divider {
+    background: rgba(245,240,232,0.3);
+    align-self: stretch;
+  }
+
+  .identity-block h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .identity-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .identity-list li {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.9;
+  }
+
+  .identity-list li i { opacity: 0.7; font-size: 0.75rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,240,232,0.45);
+    padding: 2.5rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 3px solid var(--rust);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  footer .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: 0.05em;
+  }
+
+  footer .links {
+    display: flex;
+    gap: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── PHOTO STRIP ─── */
+  .photo-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    height: 260px;
+    border-bottom: 3px solid var(--ink);
+    overflow: hidden;
+  }
+
+  .photo-strip-item {
+    position: relative;
+    overflow: hidden;
+    border-right: 2px solid var(--ink);
+  }
+
+  .photo-strip-item:last-child { border-right: none; }
+
+  .photo-strip-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(30%) contrast(1.05);
+    transition: filter 0.4s ease, transform 0.4s ease;
+  }
+
+  .photo-strip-item:hover img {
+    filter: sepia(0%) contrast(1.1);
+    transform: scale(1.04);
+  }
+
+  .photo-strip-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(26,21,16,0.85));
+    color: var(--cream);
+    padding: 1.5rem 0.75rem 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .photo-strip-item:hover .photo-strip-caption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── EVENT IMAGES ─── */
+  .event-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid var(--ink);
+    margin-bottom: 1.25rem;
+    filter: sepia(20%);
+    display: block;
+  }
+
+  /* ─── LEADER PHOTO ─── */
+  .leader-photo {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245,240,232,0.08);
+    color: var(--gold);
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(245,240,232,0.15);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { border-right: none; border-bottom: 3px solid var(--cream); padding: 3rem 2rem; }
+    .hero-right { padding: 2rem; }
+    .issues-goals, .sources-wrap { grid-template-columns: 1fr; }
+    .issues-col { border-right: none; border-bottom: 2px solid var(--ink); }
+    .leaders-grid { grid-template-columns: 1fr; }
+    .event-body { grid-template-columns: 1fr; }
+    .identity-strip { grid-template-columns: 1fr; padding: 2rem; }
+    .identity-divider { display: none; }
+    .nav-strip { padding: 0.75rem 1rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    footer .links { flex-wrap: wrap; justify-content: center; }
+    .photo-strip { grid-template-columns: repeat(2,1fr); height: auto; }
+    .photo-strip-item { height: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="top">
+  <div class="hero-left">
+    <div class="dateline">American History &mdash; 1960s</div>
+    <h1>The Youth<em>Revolt.</em></h1>
+    <p class="hero-deck">A generation raised in comfort looked up and found a world on fire. They refused the draft, rejected the rat race, and broke their silence, choosing peace, love, and radical change over the conformity their parents accepted.</p>
+    <div class="hero-meta">
+      <span><i class="fa-solid fa-users"></i> Baby Boomers</span>
+      <span><i class="fa-solid fa-calendar"></i> 1960s–1970s</span>
+      <span><i class="fa-solid fa-dove"></i> Anti-War</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="quick-facts">
+      <h3><i class="fa-solid fa-bolt" style="color:var(--rust);margin-right:.4rem"></i> Key Identifiers</h3>
+      <div class="fact-item">
+        <div class="fact-icon rust"><i class="fa-solid fa-peace"></i></div>
+        <div class="fact-text">
+          <strong>Core Values</strong>
+          <span>Peace, love, and personal freedom</span>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-icon"><i class="fa-solid fa-hand-fist"></i></div>
+        <div class="fact-text">
+          <strong>Against</strong>
+          <span>Vietnam War, racism, corporate materialism</span>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-icon gold"><i class="fa-solid fa-star"></i></div>
+        <div class="fact-text">
+          <strong>Identity Markers</strong>
+          <span>Long hair, colorful dress, psychedelic culture</span>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-icon sage"><i class="fa-solid fa-people-group"></i></div>
+        <div class="fact-text">
+          <strong>Generation</strong>
+          <span>Primarily Baby Boomers in university settings</span>
+        </div>
+      </div>
+    </div>
+    <blockquote class="hero-pullquote">
+      <p>We are people of this generation, bred in at least modest comfort, looking uncomfortably to the world we inherit.</p>
+      <cite>Tom Hayden, Port Huron Statement, 1962</cite>
+    </blockquote>
+    <div class="big-number">60s</div>
+  </div>
+</section>
+
+<!-- ─── PHOTO STRIP ─── -->
+<div class="photo-strip">
+  <div class="photo-strip-item">
+    <img src="https://ca-times.brightspotcdn.com/dims4/default/636d119/2147483647/strip/true/crop/2048x1152+0+0/resize/1200x675!/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F1d%2Fd2%2F4dc4b271733fcf6056658d292e9b%2Fla-1497967411-wbqyle5hpk-snap-image" alt="Anti-Vietnam War protesters marching on the Pentagon, 1967"/>
+    <div class="photo-strip-caption">Anti-War March on Pentagon, 1967</div>
+  </div>
+  <div class="photo-strip-item">
+    <img src="https://cdn.theatlantic.com/media/img/photo/2019/08/woodstock/w01_50461159-1/original.jpg" alt="Woodstock festival crowd, 1969"/>
+    <div class="photo-strip-caption">Woodstock, August 1969</div>
+  </div>
+  <div class="photo-strip-item">
+    <img src="https://media.npr.org/assets/img/2014/10/05/mario_savio_wide-38bc8712e8ad13dc66b97a9ee06adee2c1581286.jpg" alt="Berkeley Free Speech Movement protesters"/>
+    <div class="photo-strip-caption">Berkeley Free Speech Movement, 1964</div>
+  </div>
+  <div class="photo-strip-item">
+    <img src="https://www.pbs.org/wgbh/americanexperience/media/filer_public_thumbnails/filer_public/b0/9e/b09eac64-4d58-413d-bfad-a6cf28648eb6/two_days_antiwar_1_800.jpg__2000x1125_q85_crop_subsampling-2_upscale.jpg" alt="Student Vietnam War demonstration"/>
+    <div class="photo-strip-caption">Student Anti-War Demonstration</div>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav class="nav-strip">
+  <a href="#top"><i class="fa-solid fa-house"></i> Overview</a>
+  <a href="#goals"><i class="fa-solid fa-bullseye"></i> Goals & Issues</a>
+  <a href="#leaders"><i class="fa-solid fa-user-tie"></i> Key Leaders</a>
+  <a href="#events"><i class="fa-solid fa-timeline"></i> Key Events</a>
+</nav>
+
+<!-- ─── IDENTITY STRIP ─── -->
+<div class="identity-strip fade-in">
+  <div class="identity-block">
+    <h3><i class="fa-solid fa-circle-info"></i> Who Were They?</h3>
+    <ul class="identity-list">
+      <li><i class="fa-solid fa-chevron-right"></i> Predominantly Baby Boomers</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Students &amp; university youth</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Artists &amp; musicians</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Broadly called "Hippies"</li>
+    </ul>
+  </div>
+  <div class="identity-divider"></div>
+  <div class="identity-block">
+    <h3><i class="fa-solid fa-ban"></i> What They Rejected</h3>
+    <ul class="identity-list">
+      <li><i class="fa-solid fa-chevron-right"></i> Societal conformity</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Materialism &amp; consumerism</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Authority &amp; government</li>
+      <li><i class="fa-solid fa-chevron-right"></i> The Vietnam War</li>
+    </ul>
+  </div>
+  <div class="identity-divider"></div>
+  <div class="identity-block">
+    <h3><i class="fa-solid fa-flag"></i> What They Championed</h3>
+    <ul class="identity-list">
+      <li><i class="fa-solid fa-chevron-right"></i> Civil Rights movement</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Participatory democracy</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Personal &amp; creative freedom</li>
+      <li><i class="fa-solid fa-chevron-right"></i> Environmentalism</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ─── GOALS ─── -->
+<section id="goals">
+  <div class="section">
+    <div class="section-label">
+      <span class="num">01</span>
+      <h2>Goals &amp; Daily Struggles</h2>
+    </div>
+    <div class="issues-goals fade-in">
+      <div class="issues-col">
+        <div class="col-header"><i class="fa-solid fa-triangle-exclamation"></i> Issues They Faced</div>
+        <div class="issue-card">
+          <h4><i class="fa-solid fa-military-tech"></i> The Draft</h4>
+          <p>When men turned 18, they faced the life-changing threat of being drafted into the Vietnam War, a conflict many considered unjust and unwinnable.</p>
+        </div>
+        <div class="issue-card">
+          <h4><i class="fa-solid fa-building-columns"></i> Corporate Materialism</h4>
+          <p>Young people saw employees trapped in a "rat race," choosing money and status over genuine human connection and meaningful lives.</p>
+        </div>
+        <div class="issue-card">
+          <h4><i class="fa-solid fa-lock"></i> Campus Control</h4>
+          <p>Universities banned political speech and organizing, controlled dress codes, and locked dorms at night. These rules operated under <em>in loco parentis</em> ("in the place of a parent").</p>
+        </div>
+      </div>
+      <div class="goals-col">
+        <div class="col-header"><i class="fa-solid fa-bullseye"></i> What They Demanded</div>
+        <div class="goal-item">
+          <div class="goal-num">1</div>
+          <div>
+            <h4>End the War</h4>
+            <p>An immediate halt to U.S. involvement in Vietnam, the most visible and visceral demand of the entire movement.</p>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num">2</div>
+          <div>
+            <h4>Participatory Democracy</h4>
+            <p>A genuine political voice for young people, not just the right to vote at 21 but real representation and civic engagement at all levels.</p>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num">3</div>
+          <div>
+            <h4>Social Justice</h4>
+            <p>An end to racism and inequality, deeply connected to and inspired by the Civil Rights Movement happening simultaneously.</p>
+          </div>
+        </div>
+        <div class="goal-item">
+          <div class="goal-num">4</div>
+          <div>
+            <h4>Reject Conformity</h4>
+            <p>Freedom to live, dress, think, and organize without institutional pressure to conform to postwar American normalcy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── LEADERS ─── -->
+<section id="leaders">
+  <div class="section">
+    <div class="section-label">
+      <span class="num" style="color:var(--gold)">02</span>
+      <h2>Key Leaders</h2>
+    </div>
+    <div class="leaders-grid fade-in">
+      <div class="leader-card">
+        <div class="leader-photo" aria-hidden="true"><i class="fa-solid fa-pen-nib"></i></div>
+        <div class="leader-role"><i class="fa-solid fa-graduation-cap"></i> Student Organizer</div>
+        <div class="leader-name">Tom Hayden</div>
+        <p class="leader-desc">Student at the University of Michigan and co-founder of the Students for a Democratic Society (SDS). Primary author of the Port Huron Statement, the defining manifesto of the New Left.</p>
+      </div>
+      <div class="leader-card">
+        <div class="leader-photo" aria-hidden="true"><i class="fa-solid fa-microphone"></i></div>
+        <div class="leader-role"><i class="fa-solid fa-microphone"></i> Free Speech Activist</div>
+        <div class="leader-name">Mario Savio</div>
+        <p class="leader-desc">Philosophy student at UC Berkeley and central figure of the Berkeley Free Speech Movement. Galvanized students with fiery speeches calling for education to serve social justice.</p>
+      </div>
+      <div class="leader-card">
+        <div class="leader-photo" aria-hidden="true"><i class="fa-solid fa-flask"></i></div>
+        <div class="leader-role"><i class="fa-solid fa-flask"></i> Counterculture Icon</div>
+        <div class="leader-name">Timothy Leary</div>
+        <p class="leader-desc">Harvard psychologist and prominent advocate for psychedelic substances. Coined the phrase "Turn on, tune in, drop out," a rallying call for rejecting mainstream society.</p>
+      </div>
+      <div class="leader-card">
+        <div class="leader-photo" aria-hidden="true"><i class="fa-solid fa-guitar"></i></div>
+        <div class="leader-role"><i class="fa-solid fa-guitar"></i> Musical Voice</div>
+        <div class="leader-name">Jimi Hendrix</div>
+        <p class="leader-desc">Revolutionary guitarist whose electric sound became the sonic embodiment of the counterculture. Performed at Woodstock and represented the artistic freedom the movement championed.</p>
+      </div>
+      <div class="leader-card">
+        <div class="leader-photo" aria-hidden="true"><i class="fa-solid fa-bullhorn"></i></div>
+        <div class="leader-role"><i class="fa-solid fa-bullhorn"></i> Political Provocateurs</div>
+        <div class="leader-name">Hoffman &amp; Rubin</div>
+        <p class="leader-desc">Abbie Hoffman and Jerry Rubin co-founded the Youth International Party (Yippies), blending political theater with protest to mock and disrupt the political establishment.</p>
+      </div>
+      <div class="leader-card">
+        <div class="leader-photo" aria-hidden="true"><i class="fa-solid fa-people-group"></i></div>
+        <div class="leader-role"><i class="fa-solid fa-people-group"></i> Student Organization</div>
+        <div class="leader-name">Students for a Democratic Society</div>
+        <p class="leader-desc">Founded in 1960, the SDS became the central organizational force of the student movement, organizing protests, drafting manifestos, and coordinating campus activism nationwide.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EVENTS ─── -->
+<section id="events">
+  <div class="section">
+    <div class="section-label">
+      <span class="num">03</span>
+      <h2>Key Events</h2>
+    </div>
+    <div class="events-timeline">
+
+      <div class="event-item fade-in">
+        <div class="event-dot"></div>
+        <div class="event-date"><i class="fa-regular fa-calendar"></i> June 15, 1962</div>
+        <div class="event-header">
+          <h3 class="event-title">The Port Huron Statement &amp; the New Left</h3>
+          <span class="event-tag"><i class="fa-solid fa-file-pen"></i> Manifesto</span>
+        </div>
+        <img class="event-img" src="https://www.alumnipark.com/wp-content/uploads/2017/09/students-for-a-democratic-society-2.jpg" alt="Students for a Democratic Society"/>
+        <div class="event-body">
+          <p>The Students for a Democratic Society (SDS) released their landmark manifesto, a sweeping critique of American society written primarily by Tom Hayden. In it they declared, "We are people of this generation, bred in at least modest comfort, housed now in universities, looking uncomfortably to the world we inherit... our comfort was penetrated by events too troubling to dismiss. First, the eroding and intolerable contradictions of total racism in American life... Second, the enclosing fact of the Cold War, symbolized by the presence of the Bomb." The statement attacked racial segregation, the arms race, corporate power, and Cold War complacency, calling on universities to become sites of "social critique and democratic experimentation." The document launched a broad political realignment that became known as the New Left.</p>
+          <div class="event-details">
+            <div class="detail-row"><i class="fa-solid fa-user-pen"></i> Drafted by Tom Hayden, student leader at Michigan</div>
+            <div class="detail-row"><i class="fa-solid fa-building"></i> Released by the Students for a Democratic Society</div>
+            <div class="detail-row"><i class="fa-solid fa-star"></i> Laid the intellectual framework for sit-ins, boycotts &amp; protests</div>
+            <div class="detail-row"><i class="fa-solid fa-scale-balanced"></i> Called out U.S. failure to achieve economic justice &amp; peace</div>
+            <div class="detail-row"><i class="fa-solid fa-link"></i> <a href="https://images2.americanprogress.org/campus/email/PortHuronStatement.pdf" target="_blank" rel="noopener" style="color:var(--rust)">Read the Port Huron Statement →</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-item fade-in">
+        <div class="event-dot"></div>
+        <div class="event-date"><i class="fa-regular fa-calendar"></i> 1964–1965 Academic Year</div>
+        <div class="event-header">
+          <h3 class="event-title">The Berkeley Free Speech Movement</h3>
+          <span class="event-tag"><i class="fa-solid fa-person-walking"></i> Campus Protest</span>
+        </div>
+        <img class="event-img" src="https://firstamendment.mtsu.edu/wp-content/uploads/sites/2/2023/06/Mario_Savio___Berkeley_Free_Speech_Movement_Dec_2_1964_0-scaled.jpg" alt="Mario Savio at the Berkeley Free Speech Movement"/>
+        <div class="event-body">
+          <p>At UC Berkeley, students erupted after the university banned political advocacy on a popular campus strip. On October 1, 1964, graduate student Jack Weinberg was arrested for running a civil rights table. Enraged students surrounded the police car and kept it blockaded for 32 hours while protesters climbed atop it to deliver speeches. Mario Savio rallied the movement, arguing that students had a duty to use their education to fight injustice. His most famous line insisted that when the machine becomes "so odious" students must "put your bodies upon the gears... and you've got to make it stop," framing direct action as a moral obligation. The ultimate result was historic: free speech and political organizing became recognized rights on college campuses nationwide.</p>
+          <div class="event-details">
+            <div class="detail-row"><i class="fa-solid fa-person-circle-xmark"></i> Triggered by Jack Weinberg's arrest at a CORE table</div>
+            <div class="detail-row"><i class="fa-solid fa-clock"></i> Police car blockade lasted 32 hours</div>
+            <div class="detail-row"><i class="fa-solid fa-gavel"></i> Led to boycotts and campus-wide strikes</div>
+            <div class="detail-row"><i class="fa-solid fa-check-circle"></i> Won free speech rights for students nationwide</div>
+            <div class="detail-row"><i class="fa-solid fa-link"></i> <a href="https://www.fsm-a.org/" target="_blank" rel="noopener" style="color:var(--rust)">FSM Archive →</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-item fade-in">
+        <div class="event-dot"></div>
+        <div class="event-date"><i class="fa-regular fa-calendar"></i> January 14, 1967</div>
+        <div class="event-header">
+          <h3 class="event-title">The Human Be-In, San Francisco</h3>
+          <span class="event-tag"><i class="fa-solid fa-music"></i> Cultural Gathering</span>
+        </div>
+        <img class="event-img" src="https://cdn.britannica.com/66/255866-050-38216F00/Death-of-the-Hippie-funeral-march-Haight-Ashbury-1967.jpg" alt="Haight-Ashbury neighborhood counterculture, 1967"/>
+        <div class="event-body">
+          <p>Over 20,000 people gathered in Golden Gate Park for a day-long celebration of peace and counterculture, organized by San Francisco artist Michael Bowen. Inspired partly by California's 1966 ban on LSD, Bowen aimed to unite hippies and Berkeley anti-war activists. A newspaper account described the arrival like a "gathering of the tribes," noting that "Beards had been curled, dyed, and decorated with flowers" and that costumes ranged from a red gunnysack to a flour sack stamped "U.S.A.", with "priests of some strange religion" and even a participant who arrived by parachute. The report captured how people arrived and acted at the event, publicly advocating peace, love, and LSD, themes that defined the era. The Human Be-In became a key gathering of like-minded people who wanted to express their views on peace and civil rights in public. Timothy Leary debuted his famous phrase "turn on, tune in, drop out" before the crowd for the first time. Bands including the Grateful Dead performed while attendees openly embraced the psychedelic lifestyle. To secure a permit, organizers falsely told the city it was a private birthday party, which ensured no police presence on the grounds.</p>
+          <div class="event-details">
+            <div class="detail-row"><i class="fa-solid fa-users"></i> Drew more than 20,000 attendees</div>
+            <div class="detail-row"><i class="fa-solid fa-map-pin"></i> Golden Gate Park, San Francisco</div>
+            <div class="detail-row"><i class="fa-solid fa-guitar"></i> Grateful Dead &amp; the Holding Company performed</div>
+            <div class="detail-row"><i class="fa-solid fa-motorcycle"></i> Hell's Angels provided security</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-item fade-in">
+        <div class="event-dot"></div>
+        <div class="event-date"><i class="fa-regular fa-calendar"></i> August 15–18, 1969</div>
+        <div class="event-header">
+          <h3 class="event-title">Woodstock Music Festival</h3>
+          <span class="event-tag"><i class="fa-solid fa-star"></i> Defining Moment</span>
+        </div>
+        <img class="event-img" src="https://res.cloudinary.com/aenetworks/image/upload/c_fill,ar_2,w_3840,h_1920,g_auto/dpr_auto/f_auto/q_auto:eco/v1/woodstock-gettyimages-50618172-promo?_a=BAVMn6DY0" alt="Woodstock festival crowd, 1969"/>
+        <div class="event-body">
+          <p>Held on a farm in Bethel, New York, Woodstock drew an estimated 400,000 people, far surpassing its intended capacity, and became the defining cultural event of the entire counterculture era. Legendary performances by Jimi Hendrix, Janis Joplin, Jefferson Airplane, and The Who turned the festival into a symbol of the generation's ideals. Despite overwhelming logistical challenges, attendees largely maintained the spirit of peace and cooperation the movement championed, demonstrating that young Americans could gather en masse without violence.</p>
+          <div class="event-details">
+            <div class="detail-row"><i class="fa-solid fa-users"></i> Approximately 400,000 attendees</div>
+            <div class="detail-row"><i class="fa-solid fa-map-pin"></i> Bethel, New York</div>
+            <div class="detail-row"><i class="fa-solid fa-guitar"></i> Jimi Hendrix, Janis Joplin, The Who &amp; more</div>
+            <div class="detail-row"><i class="fa-solid fa-dove"></i> Symbol of "Peace &amp; Music" generation</div>
+            <div class="detail-row"><i class="fa-solid fa-link"></i> <a href="https://www.woodstock.com" target="_blank" rel="noopener" style="color:var(--rust)">Woodstock Official Site →</a></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="logo">Youth &amp; Counterculture</div>
+  <div>American History &mdash; 1960s Social Movements</div>
+  <div class="links">
+    <span><i class="fa-solid fa-arrow-up"></i> <a href="#top" style="color:inherit;text-decoration:none">Back to Top</a></span>
+  </div>
+</footer>
+
+<script>
+  // Intersection observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
