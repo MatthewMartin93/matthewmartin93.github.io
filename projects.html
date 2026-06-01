@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --text: #ffffff;
+      --subtext: #d1d5db;
+      --overlay: rgba(0,0,0,0.55);
+      --accent: #38bdf8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 100vh;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .card img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover img {
+      transform: scale(1.1);
+    }
+
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transition: background 0.3s ease;
+    }
+
+    .card:hover .overlay {
+      background: rgba(0,0,0,0.65);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--text);
+    }
+
+    p {
+      color: var(--subtext);
+      max-width: 260px;
+      margin-bottom: 15px;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* dividers */
+    .card:nth-child(1) { border-right: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .card:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .card:nth-child(3) { border-right: 1px solid rgba(255,255,255,0.1); }
+
+    /* mobile */
+    @media (max-width: 768px) {
+      body { overflow: auto; }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        height: 50vh;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://img.freepik.com/free-photo/photo-stone-texture-pattern_58702-16052.jpg" alt="Inventory Manager">
+      <div class="overlay">
+        <h2>Store Inventory Manager</h2>
+        <p>A Python program designed to help businesses track their inventory</p>
+        <a href="https://github.com/MatthewMartin93/CreateProject">View Repository→</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://img.freepik.com/free-photo/photo-stone-texture-pattern_58702-16052.jpg" alt="Budget Tracker">
+      <div class="overlay">
+        <h2>Budget Tracker Application</h2>
+        <p>A Java program that was made to help individuals track their incoming and spending</p>
+        <a href="https://github.com/MCST-CIS/java-portfolio-project-ch-1-6-MatthewMartin93">View Repository→</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="img/TT.png" alt="Turkey Tracker Home Page">
+      <div class="overlay">
+        <h2>Turkey Tracker Site</h2>
+        <p>A website made to combat the issues facing turkeys in New Jersey</p>
+        <a href="https://github.com/MatthewMartin93/SustainabilityProject">View Repository→</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://github.com/MCST-CIS/congressional-app-challenege-tidal-wave-studios/blob/main/tidalwavestudios/Art/Background/Island/png/Island_No_Trash.png?raw=true" alt="Sponge Fighter II Home Screen">
+      <div class="overlay">
+        <h2>Sponge Fighter II</h2>
+        <p>A video game made in Godot made to help promote ocean sustainability.</p>
+        <a href="https://github.com/MCST-CIS/congressional-app-challenege-tidal-wave-studios">View Repository</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
